@@ -7,6 +7,9 @@ const path = require("path")
 
 const user = require("./routes/user");
 const employee = require("./routes/employee");
+const auth = require("./routes/auth");
+const category = require("./routes/category");
+
 
 const app = express();
 
@@ -38,8 +41,10 @@ app.use(multer({ storage: storage , fileFilter: fileFilter, dest: './empProfile'
 
 app.use(bodyparser.json());
 
+app.use("/auth", auth)
 app.use("/users", user)
 app.use("/employees", employee)
+app.use("/categorys", category)
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}..`));
