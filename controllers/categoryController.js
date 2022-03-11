@@ -2,31 +2,45 @@ const connection = require("../db")
 const Category = require("../models/categoryModel")
 
 exports.addCategory = async (req, res, next) => {
-    connection.query('SHOW tables', async function(err, tables){ 
-        for(i=0; i< tables.length; i++){
-            console.log(tables[i].Tables_in_test,"<=========tttt")
-            if(tables[i].Tables_in_test != "category1"){
-                console.log("yessss........")
-                // return 0;
-                let tableName = "category";
-                let query = `CREATE TABLE ${tableName} (id INT AUTO_INCREMENT PRIMARY KEY, categoryName VARCHAR(100))`
-                let table = await connection.query(query)
-                if(!table){
-                    return res.status(400).send("Please Try Again")
-                }
-            }
+    console.log("working......")
+
+    connection.query(`SHOW tables`, function(err, tables){ 
+        for(i =0; i< tables.length; i++){
+            console.log(tables[i].Tables_in_test,"<========try")
+            if(tables[i].Tables_in_test != "category")
+            console.log("inside if<====")
         }
-        console.log(tables);
-        return 0;
     });
+    // return 0;
+    let tableName = 'category';
+    let query =await `CREATE TABLE ${tableName} (name VARCHAR(255), address VARCHAR(255))`;
+    if(query){
+        console.log("table already exists")
+    }
+    console.log("Check......")
+    connection.query(query, (err, rows) => {
+    if(err){console.log(err)  
+        res.status(500)
+    .json({message:"Table Creation Failed}"})};
+
+    return res.send(
+    `Successfully Created Table - ${tableName}`);
+    })
+    // });
 
     let data = {
-        categoryName: req.body.categoryName 
+        categoryName : req.body.categoryName
     }
-    let catData = new Category(data)
-
-    let cData = await connection.query(catData)
-    if(cData){
-        console.log("success.......")
-    }
+    const catData = new Category(data)
+    connection.query(catData.addCategory(), (err, result) => {
+        if(err){
+            console.log(err)
+            res.status(400).json({message: "Please Try Again"})
+        }
+        res.status(400).json({message: "Category Add Succefully"})
+    })
 }
+
+// exports.getE
+
+// mp = async
